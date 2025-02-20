@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function NotSupported() {
   return (
     <div className=" h-[60vh] flex items-center justify-center">

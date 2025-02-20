@@ -90,7 +90,7 @@ export default function MessageBox({ message }: UserMessageBoxProps) {
     <div className=" ml-25 ">
       <div className=" text-gray-100 text-base bg-[#222d3d] p-6 rounded-lg ml-auto w-fit  my-5 ">
         {/* summary options */}
-        <SummaryBtn message={message.data} />
+        <SummaryBtn message={message} />
         {/* message */}
         <div>{message.data}</div>
 

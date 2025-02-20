@@ -1,10 +1,17 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { createSummarizer } from "../utils/AiCreations";
 import DataContext from "../context/DataContext";
-import { SummaryOptions } from "../providers/DataProvider";
+import { GetMessage, SummaryOptions } from "../providers/DataProvider";
 import { FileScan } from "lucide-react";
 
-export default function SummaryBtn({ message }: { message: string }) {
+// Fix the type error by updating SummarizerOptions
+// interface SummarizerOptions {
+//     type: 'key-points';  // Only allow 'key-points' as specified in the error
+//     format: 'markdown' | 'plain' | 'html';
+//     length: 'short' | 'medium' | 'long';
+//     sharedContext: string;
+//   }
+export default function SummaryBtn({ message }: { message: GetMessage }) {
   const {
     setGetMessages,
     getMessages,

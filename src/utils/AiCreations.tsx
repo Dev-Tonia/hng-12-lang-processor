@@ -1,7 +1,6 @@
 import { Bounce, toast } from "react-toastify";
 import CustomNotification from "../components/CustomNotification";
 
-// summarizer option
 interface SummarizerOptions {
   sharedContext: string;
   type: "key-points";
@@ -9,96 +8,96 @@ interface SummarizerOptions {
   length: "medium";
 }
 
-interface Summarizer {
-  capabilities: () => Promise<{
-    available: "no" | "readily" | "after-download";
-  }>;
-  create: (options: SummarizerOptions) => Promise<{
-    ready: Promise<void>;
-    addEventListener: (
-      event: string,
-      callback: (e: { loaded: number; total: number }) => void
-    ) => void;
-  }>;
-}
-interface LanguageDetector {
-  capabilities: () => Promise<{
-    capabilities: "no" | "readily" | "after-download";
-  }>;
-  create: (options?: {
-    monitor?: (m: {
-      addEventListener: (
-        event: string,
-        callback: (e: { loaded: number; total: number }) => void
-      ) => void;
-    }) => void;
-  }) => Promise<{
-    ready: Promise<void>;
-  }>;
+interface SummarizerInstance {
+  ready: Promise<void>;
+  summarize: (text: string) => Promise<string>;
+  addEventListener: (
+    event: string,
+    callback: (e: { loaded: number; total: number }) => void
+  ) => void;
 }
 
-interface Translator {
-  create: (config: {
-    sourceLanguage: string;
-    targetLanguage: string;
-  }) => Promise<{
-    translate: (text: string) => Promise<string>;
-  }>;
+interface DetectorResult {
+  detectedLanguage: string;
+  confidence: number;
+}
+
+interface DetectorInstance {
+  ready: Promise<void>;
+  detect: (text: string) => Promise<DetectorResult[]>;
+}
+
+interface TranslatorInstance {
+  translate: (text: string) => Promise<string>;
+}
+
+interface AICapabilities {
+  available: "no" | "readily" | "after-download";
+  languagePairAvailable?: (
+    source: string,
+    target: string
+  ) => "no" | "readily" | "after-download";
 }
 
 declare global {
   interface Window {
     ai: {
-      languageDetector: LanguageDetector;
-      translator: Translator;
-      summarizer: Summarizer;
+      languageDetector: {
+        capabilities: () => Promise<{
+          capabilities: AICapabilities["available"];
+        }>;
+        create: (options?: any) => Promise<DetectorInstance>;
+      };
+      translator: {
+        capabilities: () => Promise<{
+          languagePairAvailable: (
+            source: string,
+            target: string
+          ) => AICapabilities["available"];
+        }>;
+        create: (config: any) => Promise<TranslatorInstance>;
+      };
+      summarizer: {
+        capabilities: () => Promise<{ available: AICapabilities["available"] }>;
+        create: (options: SummarizerOptions) => Promise<SummarizerInstance>;
+      };
     };
   }
 }
 
 export async function createSummarizer(options: SummarizerOptions) {
   const summarizerCapabilities = await window.ai.summarizer.capabilities();
-  const available = summarizerCapabilities.available;
-  let summarizer;
 
-  if (available === "no") {
+  if (summarizerCapabilities.available === "no") {
     toast.error(CustomNotification, {
       data: {
         title: "Oh Snap!",
         content: "Summarizer API is not available",
       },
-      ariaLabel: "Summarizer API is not available",
-      progress: undefined,
-      icon: false,
       theme: "colored",
       transition: Bounce,
-      hideProgressBar: false,
       autoClose: 5000,
     });
-
     return null;
   }
 
   try {
-    if (available !== "readily") {
-      summarizer = await window.ai.summarizer.create(options);
+    const summarizer = await window.ai.summarizer.create(options);
+
+    if (summarizerCapabilities.available === "after-download") {
       summarizer.addEventListener("downloadprogress", (e) => {
         const progress = ((e.loaded / e.total) * 100).toFixed(2);
-        toast.error("Error initializing summarizer" + progress, {
+        toast.info(`Downloading summarizer model: ${progress}%`, {
           theme: "colored",
           transition: Bounce,
         });
-        console.log(`Download progress: ${progress}%`);
       });
       await summarizer.ready;
-    } else {
-      summarizer = await window.ai.summarizer.create(options);
     }
 
-    const summary = await summarizer.summarize(options.sharedContext);
-    return summary;
+    return await summarizer.summarize(options.sharedContext);
   } catch (error) {
-    toast.error("Error initializing summarizer" + error, {
+    toast.error(`Summarizer error: ${error}`, {
       theme: "colored",
       transition: Bounce,
     });
@@ -110,41 +109,38 @@ export async function detectLanguage(
   messageData: string,
   setDetectedLanguage?: (lang: string) => void
 ) {
-  const languageDetectorCapabilities =
+  const { capabilities: canDetect } =
     await window.ai.languageDetector.capabilities();
-  const canDetect = languageDetectorCapabilities.capabilities;
-  let detector;
 
-  //   checking if a device can use the language detector
   if (canDetect === "no") {
     toast.error(CustomNotification, {
       data: {
         title: "Oh Snap!",
-        content: "The language detector isn't usable.",
+        content: "Language detection not available",
       },
-      ariaLabel: "The language detector isn't usable.",
-      progress: undefined,
-      icon: false,
       theme: "colored",
       transition: Bounce,
-      hideProgressBar: false,
       autoClose: 5000,
     });
-    return;
+    return null;
   }
 
   try {
-    if (canDetect !== "readily") {
-      detector = await window.ai.languageDetector.create({
-        monitor(m) {
-          m.addEventListener("downloadprogress", (e) => {
-            console.log(`Downloaded ${e.loaded} of ${e.total} bytes.`);
-          });
-        },
-      });
+    const detector = await window.ai.languageDetector.create(
+      canDetect === "after-download"
+        ? {
+            monitor: (m) => {
+              m.addEventListener("downloadprogress", (e) => {
+                const progress = ((e.loaded / e.total) * 100).toFixed(2);
+                toast.info(`Downloading language model: ${progress}%`);
+              });
+            },
+          }
+        : undefined
+    );
+
+    if (canDetect === "after-download") {
       await detector.ready;
-    } else {
-      detector = await window.ai.languageDetector.create();
     }
 
     const results = await detector.detect(messageData);
@@ -152,26 +148,10 @@ export async function detectLanguage(
       current.confidence > max.confidence ? current : max
     );
 
-    toast.info(
-      `Detected Language: ${highestConfidence.detectedLanguage} (${(
-        highestConfidence.confidence * 100
-      ).toFixed(2)}% confidence)`,
-      {
-        position: "top-right",
-        autoClose: 3000,
-        theme: "colored",
-        transition: Bounce,
-      }
-    );
-
-    if (setDetectedLanguage) {
-      setDetectedLanguage(highestConfidence.detectedLanguage);
-    }
-
+    setDetectedLanguage?.(highestConfidence.detectedLanguage);
     return highestConfidence;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    toast.error("Error detecting language", {
+    toast.error("Language detection failed", {
       theme: "colored",
       transition: Bounce,
     });
@@ -183,47 +163,8 @@ export async function createTranslator(
   sourceLanguage: string,
   targetLanguage: string,
   text: string
-) {
+): Promise<string | null> {
   try {
-    const translatorCapabilities = await window.ai.translator.capabilities();
-    const canTranslate = translatorCapabilities.languagePairAvailable(
-      sourceLanguage,
-      targetLanguage
-    );
-
-    if (canTranslate === "no") {
-      toast.error(CustomNotification, {
-        data: {
-          title: "Translation Unavailable",
-          content: "This language pair is not supported for translation.",
-        },
-        theme: "colored",
-        transition: Bounce,
-        autoClose: 5000,
-      });
-      return null;
-    }
-
-    if (canTranslate !== "readily") {
-      const translator = await window.ai.translator.create({
-        sourceLanguage,
-        targetLanguage,
-        monitor(m) {
-          m.addEventListener("downloadprogress", (e) => {
-            const progress = ((e.loaded / e.total) * 100).toFixed(2);
-            toast.info(`Downloading translation model: ${progress}%`, {
-              position: "top-right",
-              autoClose: 2000,
-              theme: "colored",
-              transition: Bounce,
-            });
-          });
-        },
-      });
-      const translatedText = await translator.translate(text);
-      return translatedText;
-    }
-
     const translator = await window.ai.translator.create({
       sourceLanguage,
       targetLanguage,
