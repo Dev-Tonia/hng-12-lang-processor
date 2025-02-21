@@ -94,7 +94,7 @@ export default function MessageBox({ message }: UserMessageBoxProps) {
   // check if the message is greater than  150 characters
   const isLongMessage = message.data.length > 150;
   return (
-    <div className=" ml-25 ">
+    <div className=" ml-3 sm:ml-10 md:ml-25 ">
       <div className=" text-gray-100 text-base bg-[#222d3d] p-6 rounded-lg ml-auto w-fit  my-5 ">
         {/* summary options */}
         {isLongMessage && <SummaryBtn message={message} />}
