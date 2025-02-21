@@ -89,7 +89,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="bg-[#020818] flex space-x-3 ">
       <SideBar />
-      <div className=" relative  min-h-screen  w-full ">
+      <div className="   min-h-screen  w-full ">
         <header className="wrapper sticky top-0 left-0 right-0 bg-[#020818]  px-4 py-2 shadow-2xl backdrop-blur-2xl">
           <div className=" flex items-center justify-end"></div>
         </header>

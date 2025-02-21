@@ -7,9 +7,9 @@ export interface GetMessage {
   lang: string;
 }
 export interface SummaryOptions {
-  type: "key-points" | "summary" | "outline";
-  format: "markdown" | "plain" | "html";
-  length: "short" | "medium" | "long";
+  type: string;
+  format: string;
+  length: string;
 }
 
 export const DataProvider = ({ children }: { children: React.ReactNode }) => {

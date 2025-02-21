@@ -1,11 +1,23 @@
 import { Bounce, toast } from "react-toastify";
 import CustomNotification from "../components/CustomNotification";
 
+interface ProgressEvent {
+  loaded: number;
+  total: number;
+}
+
+interface ProgressMonitor {
+  addEventListener: (
+    event: string,
+    callback: (e: ProgressEvent) => void
+  ) => void;
+}
+
 interface SummarizerOptions {
   sharedContext: string;
-  type: "key-points";
-  format: "markdown";
-  length: "medium";
+  type: string;
+  format: string;
+  length: string;
 }
 
 interface SummarizerInstance {
@@ -13,7 +25,7 @@ interface SummarizerInstance {
   summarize: (text: string) => Promise<string>;
   addEventListener: (
     event: string,
-    callback: (e: { loaded: number; total: number }) => void
+    callback: (e: ProgressEvent) => void
   ) => void;
 }
 
@@ -46,7 +58,9 @@ declare global {
         capabilities: () => Promise<{
           capabilities: AICapabilities["available"];
         }>;
-        create: (options?: any) => Promise<DetectorInstance>;
+        create: (options?: {
+          monitor?: (m: ProgressMonitor) => void;
+        }) => Promise<DetectorInstance>;
       };
       translator: {
         capabilities: () => Promise<{
@@ -55,7 +69,11 @@ declare global {
             target: string
           ) => AICapabilities["available"];
         }>;
-        create: (config: any) => Promise<TranslatorInstance>;
+        create: (config: {
+          sourceLanguage: string;
+          targetLanguage: string;
+          monitor?: (m: ProgressMonitor) => void;
+        }) => Promise<TranslatorInstance>;
       };
       summarizer: {
         capabilities: () => Promise<{ available: AICapabilities["available"] }>;
@@ -85,7 +103,7 @@ export async function createSummarizer(options: SummarizerOptions) {
     const summarizer = await window.ai.summarizer.create(options);
 
     if (summarizerCapabilities.available === "after-download") {
-      summarizer.addEventListener("downloadprogress", (e) => {
+      summarizer.addEventListener("downloadprogress", (e: ProgressEvent) => {
         const progress = ((e.loaded / e.total) * 100).toFixed(2);
         toast.info(`Downloading summarizer model: ${progress}%`, {
           theme: "colored",
@@ -129,8 +147,8 @@ export async function detectLanguage(
     const detector = await window.ai.languageDetector.create(
       canDetect === "after-download"
         ? {
-            monitor: (m) => {
-              m.addEventListener("downloadprogress", (e) => {
+            monitor: (m: ProgressMonitor) => {
+              m.addEventListener("downloadprogress", (e: ProgressEvent) => {
                 const progress = ((e.loaded / e.total) * 100).toFixed(2);
                 toast.info(`Downloading language model: ${progress}%`);
               });
@@ -150,6 +168,7 @@ export async function detectLanguage(
 
     setDetectedLanguage?.(highestConfidence.detectedLanguage);
     return highestConfidence;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     toast.error("Language detection failed", {
       theme: "colored",
@@ -165,9 +184,37 @@ export async function createTranslator(
   text: string
 ): Promise<string | null> {
   try {
+    const translatorCapabilities = await window.ai.translator.capabilities();
+    const canTranslate = translatorCapabilities.languagePairAvailable(
+      sourceLanguage,
+      targetLanguage
+    );
+
+    if (canTranslate === "no") {
+      toast.error(CustomNotification, {
+        data: {
+          title: "Translation Unavailable",
+          content: "This language pair is not supported.",
+        },
+        theme: "colored",
+        transition: Bounce,
+        autoClose: 5000,
+      });
+      return null;
+    }
+
     const translator = await window.ai.translator.create({
       sourceLanguage,
       targetLanguage,
+      monitor:
+        canTranslate === "after-download"
+          ? (m: ProgressMonitor) => {
+              m.addEventListener("downloadprogress", (e: ProgressEvent) => {
+                const progress = ((e.loaded / e.total) * 100).toFixed(2);
+                toast.info(`Downloading translation model: ${progress}%`);
+              });
+            }
+          : undefined,
     });
 
     const translatedText = await translator.translate(text);
