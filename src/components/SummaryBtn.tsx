@@ -1,14 +1,14 @@
 import { useContext } from "react";
 // import { createSummarizer } from "../utils/AiCreations";
 import DataContext from "../context/DataContext";
-import { GetMessage, SummaryOptions } from "../providers/DataProvider";
+import { Messages, SummaryOptions } from "../providers/DataProvider";
 import { FileScan } from "lucide-react";
 
-export default function SummaryBtn({ message }: { message: GetMessage }) {
+export default function SummaryBtn({ message }: { message: Messages }) {
   // vaules from context
   const {
-    setGetMessages,
-    getMessages,
+    setEachChatSession,
+    eachChatSession,
     selectLang,
     summaryOptions,
     setSummaryOptions,
@@ -49,9 +49,10 @@ export default function SummaryBtn({ message }: { message: GetMessage }) {
       await summarizer.ready;
     }
     const summary = await summarizer.summarize(message.data);
-    setGetMessages([
-      ...getMessages,
-      { data: summary, from: "bot", lang: selectLang },
+
+    setEachChatSession([
+      ...eachChatSession,
+      { data: summary, from: "bot", lang: selectLang, date: new Date() },
     ]);
   };
 

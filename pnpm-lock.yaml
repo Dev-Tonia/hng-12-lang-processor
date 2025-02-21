@@ -8,12 +8,18 @@ dependencies:
   '@tailwindcss/vite':
     specifier: ^4.0.7
     version: 4.0.7(vite@6.1.0)
+  '@types/react-router-dom':
+    specifier: ^5.3.3
+    version: 5.3.3
   clsx:
     specifier: ^2.1.1
     version: 2.1.1
   cx:
     specifier: ^25.2.1
     version: 25.2.1(@types/react@19.0.10)(react-dom@19.0.0)(react@19.0.0)
+  idb:
+    specifier: ^8.0.2
+    version: 8.0.2
   lucide-react:
     specifier: ^0.475.0
     version: 0.475.0(react@19.0.0)
@@ -23,12 +29,21 @@ dependencies:
   react-dom:
     specifier: ^19.0.0
     version: 19.0.0(react@19.0.0)
+  react-router:
+    specifier: ^7.2.0
+    version: 7.2.0(react-dom@19.0.0)(react@19.0.0)
+  react-router-dom:
+    specifier: ^7.2.0
+    version: 7.2.0(react-dom@19.0.0)(react@19.0.0)
   react-toastify:
     specifier: ^11.0.3
     version: 11.0.3(react-dom@19.0.0)(react@19.0.0)
   tailwindcss:
     specifier: ^4.0.7
     version: 4.0.7
+  uuid:
+    specifier: ^11.1.0
+    version: 11.1.0
 
 devDependencies:
   '@eslint/js':
@@ -898,8 +913,16 @@ packages:
       '@babel/types': 7.26.9
     dev: true
 
+  /@types/cookie@0.6.0:
+    resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
+    dev: false
+
   /@types/estree@1.0.6:
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
+
+  /@types/history@4.7.11:
+    resolution: {integrity: sha512-qjDJRrmvBMiTx+jyLxvLfJU7UznFuokDv4f3WRuriHKERccVpFU+8XMQUAbDzoiJCsmexxRExQeMwwCdamSKDA==}
+    dev: false
 
   /@types/json-schema@7.0.15:
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -912,6 +935,21 @@ packages:
     dependencies:
       '@types/react': 19.0.10
     dev: true
+
+  /@types/react-router-dom@5.3.3:
+    resolution: {integrity: sha512-kpqnYK4wcdm5UaWI3fLcELopqLrHgLqNsdpHauzlQktfkHL3npOSwtj1Uz9oKBAzs7lFtVkV8j83voAz2D8fhw==}
+    dependencies:
+      '@types/history': 4.7.11
+      '@types/react': 19.0.10
+      '@types/react-router': 5.1.20
+    dev: false
+
+  /@types/react-router@5.1.20:
+    resolution: {integrity: sha512-jGjmu/ZqS7FjSH6owMcD5qpq19+1RS9DeVRqfl1FeBMxTDQAGwlMWOcs52NDoXaNKyG3d1cYQFMs9rCrb88o9Q==}
+    dependencies:
+      '@types/history': 4.7.11
+      '@types/react': 19.0.10
+    dev: false
 
   /@types/react@19.0.10:
     resolution: {integrity: sha512-JuRQ9KXLEjaUNjTWpzuR231Z2WpIwczOkBEIvbHNCzQefFIT0L8IqE6NV6ULLyC1SI/i234JnDoMkfg+RjQj2g==}
@@ -1159,6 +1197,11 @@ packages:
   /convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
     dev: true
+
+  /cookie@1.0.2:
+    resolution: {integrity: sha512-9Kr/j4O16ISv8zBBhJoi4bXOYNTkFLOqSL3UDB0njXxCXNezjeyVrJyGOWtgfs/q2km1gwBcfH8q1yEGoMYunA==}
+    engines: {node: '>=18'}
+    dev: false
 
   /cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
@@ -1494,6 +1537,10 @@ packages:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
     engines: {node: '>=8'}
     dev: true
+
+  /idb@8.0.2:
+    resolution: {integrity: sha512-CX70rYhx7GDDQzwwQMDwF6kDRQi5vVs6khHUumDrMecBylKkwvZ8HWvKV08AGb7VbpoGCWUQ4aHzNDgoUiOIUg==}
+    dev: false
 
   /ignore@5.3.2:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
@@ -1855,6 +1902,36 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /react-router-dom@7.2.0(react-dom@19.0.0)(react@19.0.0):
+    resolution: {integrity: sha512-cU7lTxETGtQRQbafJubvZKHEn5izNABxZhBY0Jlzdv0gqQhCPQt2J8aN5ZPjS6mQOXn5NnirWNh+FpE8TTYN0Q==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
+    dependencies:
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+      react-router: 7.2.0(react-dom@19.0.0)(react@19.0.0)
+    dev: false
+
+  /react-router@7.2.0(react-dom@19.0.0)(react@19.0.0):
+    resolution: {integrity: sha512-fXyqzPgCPZbqhrk7k3hPcCpYIlQ2ugIXDboHUzhJISFVy2DEPsmHgN588MyGmkIOv3jDgNfUE3kJi83L28s/LQ==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+    dependencies:
+      '@types/cookie': 0.6.0
+      cookie: 1.0.2
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+      set-cookie-parser: 2.7.1
+      turbo-stream: 2.4.0
+    dev: false
+
   /react-toastify@11.0.3(react-dom@19.0.0)(react@19.0.0):
     resolution: {integrity: sha512-cbPtHJPfc0sGqVwozBwaTrTu1ogB9+BLLjd4dDXd863qYLj7DGrQ2sg5RAChjFUB4yc3w8iXOtWcJqPK/6xqRQ==}
     peerDependencies:
@@ -1935,6 +2012,10 @@ packages:
     hasBin: true
     dev: true
 
+  /set-cookie-parser@2.7.1:
+    resolution: {integrity: sha512-IOc8uWeOZgnb3ptbCURJWNjWUPcO3ZnTTdzsurqERrP6nPyv+paC55vJM0LpOlT2ne+Ix+9+CRG1MNLlyZ4GjQ==}
+    dev: false
+
   /shebang-command@2.0.0:
     resolution: {integrity: sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==}
     engines: {node: '>=8'}
@@ -1988,6 +2069,10 @@ packages:
       typescript: 5.7.3
     dev: true
 
+  /turbo-stream@2.4.0:
+    resolution: {integrity: sha512-FHncC10WpBd2eOmGwpmQsWLDoK4cqsA/UT/GqNoaKOQnT8uzhtCbg3EoUDMvqpOSAI0S26mr0rkjzbOO6S3v1g==}
+    dev: false
+
   /type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
     engines: {node: '>= 0.8.0'}
@@ -2033,6 +2118,11 @@ packages:
     dependencies:
       punycode: 2.3.1
     dev: true
+
+  /uuid@11.1.0:
+    resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
+    hasBin: true
+    dev: false
 
   /vite@6.1.0:
     resolution: {integrity: sha512-RjjMipCKVoR4hVfPY6GQTgveinjNuyLw+qruksLDvA5ktI1150VmcMBKmQaEWJhg/j6Uaf6dNCNA0AfdzUb/hQ==}

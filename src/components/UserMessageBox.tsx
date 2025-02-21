@@ -5,12 +5,12 @@ import { Bounce, toast } from "react-toastify";
 import CustomNotification from "./CustomNotification";
 import SummaryBtn from "./SummaryBtn";
 import { Globe } from "lucide-react";
-import { GetMessage } from "../providers/DataProvider";
+import { Messages } from "../providers/DataProvider";
 // import { FileScan, Globe } from "lucide-react";
 // import { SummaryOptions } from "../providers/DataProvider";
 
 type UserMessageBoxProps = {
-  message: GetMessage; // Use the GetMessage type
+  message: Messages; // Use the GetMessage type
 };
 
 export default function MessageBox({ message }: UserMessageBoxProps) {
@@ -42,7 +42,7 @@ export default function MessageBox({ message }: UserMessageBoxProps) {
     },
   ];
 
-  const { setSelectLang, setGetMessages, getMessages, selectLang } =
+  const { setSelectLang, eachChatSession, setEachChatSession, selectLang } =
     useContext(DataContext);
 
   // function to handle language change
@@ -76,12 +76,17 @@ export default function MessageBox({ message }: UserMessageBoxProps) {
       message.data
     );
     if (translatedText) {
-      setGetMessages([
-        ...getMessages,
+      // setGetMessages([
+      //   ...getMessages,
+
+      // ]);
+      setEachChatSession([
+        ...eachChatSession,
         {
           data: translatedText,
           from: "bot",
           lang: "fr",
+          date: new Date(),
         },
       ]);
     }

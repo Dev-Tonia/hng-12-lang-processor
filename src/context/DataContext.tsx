@@ -1,18 +1,26 @@
 import { createContext } from "react";
-import { GetMessage, SummaryOptions } from "../providers/DataProvider";
+import {
+  GetMessage,
+  Messages,
+  SummaryOptions,
+} from "../providers/DataProvider";
 interface DataContextType {
   selectLang: string;
   setSelectLang: (lang: string) => void;
   message: string;
   setMessage: (message: string) => void;
   getMessages: GetMessage[];
-  setGetMessages: (message: GetMessage[]) => void;
+  setGetMessages: (getMessages: GetMessage[]) => void;
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
   detectedLang: string;
   setDetectedLang: (lang: string) => void;
   summaryOptions: SummaryOptions;
   setSummaryOptions: (options: SummaryOptions) => void;
+  eachChatSession: Messages[];
+  setEachChatSession: (eachChatSession: Messages[]) => void;
+  uuid: string;
+  setUuid: (uuid: string) => void;
 }
 
 // Define a default value
@@ -43,6 +51,14 @@ const defaultContextValue: DataContextType = {
     length: "medium",
   },
   setSummaryOptions: () => {
+    console.warn("No provider found!");
+  },
+  eachChatSession: [],
+  setEachChatSession: () => {
+    console.warn("No provider found!");
+  },
+  uuid: "",
+  setUuid: () => {
     console.warn("No provider found!");
   },
 };

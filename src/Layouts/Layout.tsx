@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import { Outlet } from "react-router-dom";
 import SideBar from "../components/Sidebar";
 import DataContext from "../context/DataContext";
 import { detectLanguage } from "../utils/AiCreations";
@@ -6,16 +7,19 @@ import { Bounce, toast } from "react-toastify";
 import CustomNotification from "../components/CustomNotification";
 import Navbar from "../components/Navbar";
 import { Send } from "lucide-react";
+import { Messages } from "../providers/DataProvider";
+// import { v4 as uuidv4 } from "uuid";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout() {
   // get the selected language from the context
   const {
     message,
     setMessage,
-    setGetMessages,
-    getMessages,
+
     setIsLoading,
     isLoading,
+    setEachChatSession,
+    eachChatSession,
   } = useContext(DataContext);
 
   const handleMessage = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -78,10 +82,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
 
     if (!isLoading) {
-      setGetMessages([
-        ...getMessages,
-        { data: message, from: "user", lang: lang },
-      ]);
+      // set the chat message
+      const newMessage: Messages = {
+        data: message,
+        from: "user",
+        lang: lang,
+        date: new Date(),
+      };
+      setEachChatSession([...eachChatSession, newMessage]);
+
+      // setGetMessages([...getMessages, newMessage]);
+
       setMessage("");
     }
   };
@@ -107,7 +118,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="   min-h-screen w-full  sm:w-[75%]  min-[920px]:w-[80%] ">
         <Navbar toggleSidebar={toggleSidebar} />
         <main className=" wrapper py-9 min-h-[70vh] relative">
-          {children}
+          <Outlet />
 
           <div className="sticky bottom-0 right-0 left-0 w-full bg-[#020818] p-4">
             <div className="flex space-x-2.5 w-full bg-[#020818] rounded-lg border border-[#222d3d] text-gray-200 focus-within:border-[#3498db] pl-2 pr-4 py-3">
