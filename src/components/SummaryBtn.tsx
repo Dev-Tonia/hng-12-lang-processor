@@ -57,9 +57,9 @@ export default function SummaryBtn({ message }: { message: Messages }) {
   };
 
   return (
-    <div className="flex justify-between items-end mb-5">
-      <div className="flex items-end space-x-5">
-        <div className="text-gray-100">
+    <div className="flex justify-between items-end auto-cols-min mb-5">
+      <div className="grid grid-cols-2 min-[500px]:grid-cols-4  items-end gap-4 min-[840px]:gap-2">
+        <div className="text-gray-100 w-fit">
           <select
             value={summaryOptions.type}
             onChange={(e) => handleOptionChange("type", e.target.value)}
@@ -71,18 +71,18 @@ export default function SummaryBtn({ message }: { message: Messages }) {
             <option value="headline">Headline</option>
           </select>
         </div>
-        <div className="text-gray-100">
+        <div className="text-gray-100 w-full">
           <select
             value={summaryOptions.length}
             onChange={(e) => handleOptionChange("length", e.target.value)}
-            className="text-gray-200 bg-[#222d3d] border text-xs border-[#3498db] focus:border-[#3498db] px-2 py-1 rounded-lg"
+            className="text-gray-200 bg-[#222d3d] w-full border text-xs border-[#3498db] focus:border-[#3498db] px-2 py-1 rounded-lg"
           >
             <option value="short">Short</option>
             <option value="medium">Medium</option>
             <option value="long">Long</option>
           </select>
         </div>
-        <div className="text-gray-100">
+        <div className="text-gray-100 w-fit">
           <select
             value={summaryOptions.format}
             onChange={(e) => handleOptionChange("format", e.target.value)}
@@ -94,7 +94,7 @@ export default function SummaryBtn({ message }: { message: Messages }) {
         </div>
         <button
           onClick={handleSummarize}
-          className="text-gray-200 bg-[#3498db] cursor-pointer border border-[#3498db] focus:border-[#3498db] px-3 py-1.5 rounded-lg"
+          className="text-gray-200 bg-[#3498db]  w-fit cursor-pointer border border-[#3498db] focus:border-[#3498db] px-3 py-1.5 rounded-lg"
           aria-label="Summarize"
         >
           <FileScan />

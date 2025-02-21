@@ -4,7 +4,7 @@ type UserMessageBoxProps = {
 };
 export default function AiMessageBox({ message }: UserMessageBoxProps) {
   return (
-    <div className=" mr-25 ">
+    <div className=" mr-3 sm:mr-10 md:mr-25 ">
       <div className=" text-gray-100 text-base bg-[#10141E] p-6 rounded-lg mr-auto w-fit my-5 ">
         <div>{message.data}</div>
         <p className=" bg-[#35265F]/50 px-3 rounded-full inline-block my-3">

@@ -105,12 +105,12 @@ export default function MessageBox({ message }: UserMessageBoxProps) {
         </p>
         {/* language options */}
         <div className="  flex justify-end mt-5">
-          <div className=" flex  items-end space-x-5">
-            <div className=" flex flex-col  text-gray-100">
+          <div className=" flex flex-col  min-[290px]:flex-row items-end gap-5">
+            <div className=" flex flex-col  text-gray-100 -full min-[290px]:w-fit">
               <select
                 name="lang"
                 id=""
-                className=" text-gray-200 bg-[#020818] border border-[#3498db] focus:border-[#3498db] px-3 py-1.5 rounded-lg"
+                className=" text-gray-200 bg-[#020818] w-full min-[290px]:w-fit border border-[#3498db] focus:border-[#3498db] px-3 py-1.5 rounded-lg"
                 onChange={handleLangChange}
               >
                 <option value="">Select Lang</option>
