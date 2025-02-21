@@ -64,10 +64,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       });
       return;
     }
-    let lang = "";
+
+    let lang: string = "en"; // Default language code, e.g., 'en' for English
+
     if (message.trim() !== "") {
       setIsLoading(true);
-      lang = await handleLanguageDetection(message);
+      const detectedLang = await handleLanguageDetection(message);
+      if (detectedLang) {
+        lang = detectedLang;
+      }
       setIsLoading(false);
     }
 
