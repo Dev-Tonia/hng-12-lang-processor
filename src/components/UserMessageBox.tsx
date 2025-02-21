@@ -86,20 +86,20 @@ export default function MessageBox({ message }: UserMessageBoxProps) {
       ]);
     }
   };
-
+  // check if the message is greater than  150 characters
+  const isLongMessage = message.data.length > 150;
   return (
     <div className=" ml-25 ">
       <div className=" text-gray-100 text-base bg-[#222d3d] p-6 rounded-lg ml-auto w-fit  my-5 ">
         {/* summary options */}
-        <SummaryBtn message={message} />
+        {isLongMessage && <SummaryBtn message={message} />}
         {/* message */}
         <div>{message.data}</div>
-
+        <p className=" bg-[#35265F]/50 px-3 rounded-full inline-block my-3">
+          language: <span className=" font-bold"> {message.lang} </span>
+        </p>
         {/* language options */}
-        <div className=" flex justify-between items-end mt-5">
-          <p className=" bg-[#35265F]/50 px-3 rounded-full inline-block">
-            language: <span className=" font-bold"> {message.lang} </span>
-          </p>
+        <div className="  flex justify-end mt-5">
           <div className=" flex  items-end space-x-5">
             <div className=" flex flex-col  text-gray-100">
               <select

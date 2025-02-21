@@ -5,6 +5,7 @@ import { GetMessage, SummaryOptions } from "../providers/DataProvider";
 import { FileScan } from "lucide-react";
 
 export default function SummaryBtn({ message }: { message: GetMessage }) {
+  // vaules from context
   const {
     setGetMessages,
     getMessages,
@@ -13,6 +14,7 @@ export default function SummaryBtn({ message }: { message: GetMessage }) {
     setSummaryOptions,
   } = useContext(DataContext);
 
+  // handle summary option change
   const handleOptionChange = (option: keyof SummaryOptions, value: string) => {
     setSummaryOptions({
       ...summaryOptions,
@@ -20,6 +22,7 @@ export default function SummaryBtn({ message }: { message: GetMessage }) {
     });
   };
 
+  // summarize the message
   const handleSummarize = async () => {
     const options = {
       sharedContext: "This is a context",

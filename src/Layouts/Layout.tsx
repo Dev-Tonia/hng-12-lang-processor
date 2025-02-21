@@ -1,10 +1,11 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import SideBar from "../components/Sidebar";
 import DataContext from "../context/DataContext";
-import { Send } from "lucide-react";
 import { detectLanguage } from "../utils/AiCreations";
 import { Bounce, toast } from "react-toastify";
 import CustomNotification from "../components/CustomNotification";
+import Navbar from "../components/Navbar";
+import { Send } from "lucide-react";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   // get the selected language from the context
@@ -91,13 +92,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
   };
 
+  // open the sidebar
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
-    <div className="bg-[#020818] flex space-x-3 ">
-      <SideBar />
-      <div className="   min-h-screen  w-full ">
-        <header className="wrapper sticky top-0 left-0 right-0 bg-[#020818]  px-4 py-2 shadow-2xl backdrop-blur-2xl">
-          <div className=" flex items-center justify-end"></div>
-        </header>
+    <div className="bg-[#020818] flex space-x-3 relative ">
+      <SideBar isOpen={isOpen} toggleSidebar={toggleSidebar} />
+      <div className=" hidden sm:block sm:w-[25%]  min-[920px]:w-[20%]"></div>
+
+      <div className="   min-h-screen w-full  sm:w-[75%]  min-[920px]:w-[80%] ">
+        <Navbar toggleSidebar={toggleSidebar} />
         <main className=" wrapper py-9 min-h-[70vh] relative">
           {children}
 
