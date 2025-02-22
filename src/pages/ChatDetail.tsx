@@ -3,34 +3,60 @@ import { useParams } from "react-router-dom";
 import UserMessageBox from "../components/UserMessageBox";
 import AiMessageBox from "../components/AiMessageBox";
 import DataContext from "../context/DataContext";
-import { ToastContainer } from "react-toastify";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 import NotSupported from "../components/NotSupported";
-import { getChatSession } from "../utils/db"; // Import the function to retrieve a chat session
+import { getChatSession } from "../utils/db";
+import CustomNotification from "../components/CustomNotification";
 
 export default function ChatDetail() {
-  const { chatId } = useParams<{ chatId: string }>(); // Get the chat session ID from the URL
-  const { eachChatSession, setEachChatSession } = useContext(DataContext); // Use context to manage chat session data
+  const { chatId } = useParams<{ chatId: string }>();
+  const { eachChatSession, setEachChatSession, setGetMessages, getMessages } =
+    useContext(DataContext);
   const isSupported = () => "ai" in self;
 
   // Fetch chat session data when the component mounts or the ID changes
   useEffect(() => {
     const fetchChatSession = async () => {
       if (chatId) {
-        console.log("Fetching chat session for chatId:", chatId); // Debugging: Log the chatId
-        const session = await getChatSession(chatId); // Fetch the chat session from IndexedDB
-        console.log("Retrieved session:", session); // Debugging: Log the retrieved session
+        const session = await getChatSession(chatId);
+        console.log("Retrieved session:", session);
         if (session) {
-          setEachChatSession(session.messages); // Populate the chat session data
+          setEachChatSession(session.messages);
+          setGetMessages([...getMessages, ...session]);
         } else {
-          console.error("No session found for chatId:", chatId); // Debugging: Log if no session is found
+          toast.error(CustomNotification, {
+            data: {
+              title: "Oh Snap!",
+              content: "No session found for chatId:" + chatId,
+            },
+            ariaLabel: "No session found for chatId:" + chatId,
+            progress: undefined,
+            icon: false,
+            theme: "colored",
+            transition: Bounce,
+            hideProgressBar: false,
+            autoClose: 5000,
+          });
         }
       }
     };
 
     fetchChatSession().catch((error) => {
-      console.error("Failed to fetch chat session:", error);
+      toast.error(CustomNotification, {
+        data: {
+          title: "Oh Snap!",
+          content: "Failed to fetch chat session:" + error.message,
+        },
+        ariaLabel: "Failed to fetch chat session:" + error.message,
+        progress: undefined,
+        icon: false,
+        theme: "colored",
+        transition: Bounce,
+        hideProgressBar: false,
+        autoClose: 5000,
+      });
     });
-  }, [chatId, setEachChatSession]);
+  }, [chatId, setEachChatSession, getMessages, setGetMessages]);
 
   return (
     <div className="">

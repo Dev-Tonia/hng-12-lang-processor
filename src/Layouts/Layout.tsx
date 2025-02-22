@@ -111,16 +111,16 @@ export default function Layout() {
   };
 
   return (
-    <div className="bg-[#020818] flex space-x-3 relative ">
+    <div className="bg-[#020818] flex space-x-3  ">
       <SideBar isOpen={isOpen} toggleSidebar={toggleSidebar} />
       <div className=" hidden sm:block sm:w-[25%]  min-[920px]:w-[20%]"></div>
 
       <div className="   min-h-screen w-full  sm:w-[75%]  min-[920px]:w-[80%] ">
         <Navbar toggleSidebar={toggleSidebar} />
-        <main className=" wrapper py-9 min-h-[70vh] relative">
+        <main className=" wrapper py-9 min-h-[85vh] sm:min-h-[95vh] relative">
           <Outlet />
 
-          <div className="sticky bottom-0 right-0 left-0 w-full bg-[#020818] p-4">
+          <div className="absolute bottom-0 right-0 left-0 w-full bg-[#020818] p-4">
             <div className="flex space-x-2.5 w-full bg-[#020818] rounded-lg border border-[#222d3d] text-gray-200 focus-within:border-[#3498db] pl-2 pr-4 py-3">
               <textarea
                 onChange={handleMessage}

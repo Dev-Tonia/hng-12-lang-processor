@@ -76,10 +76,6 @@ export default function MessageBox({ message }: UserMessageBoxProps) {
       message.data
     );
     if (translatedText) {
-      // setGetMessages([
-      //   ...getMessages,
-
-      // ]);
       setEachChatSession([
         ...eachChatSession,
         {
