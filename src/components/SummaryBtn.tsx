@@ -3,6 +3,8 @@ import { useContext } from "react";
 import DataContext from "../context/DataContext";
 import { Messages, SummaryOptions } from "../providers/DataProvider";
 import { FileScan } from "lucide-react";
+import { Bounce, toast } from "react-toastify";
+import CustomNotification from "./CustomNotification";
 
 export default function SummaryBtn({ message }: { message: Messages }) {
   // vaules from context
@@ -12,6 +14,7 @@ export default function SummaryBtn({ message }: { message: Messages }) {
     selectLang,
     summaryOptions,
     setSummaryOptions,
+    setIsSummarizing,
   } = useContext(DataContext);
 
   // handle summary option change
@@ -24,36 +27,62 @@ export default function SummaryBtn({ message }: { message: Messages }) {
 
   // summarize the message
   const handleSummarize = async () => {
-    const options = {
-      sharedContext: "This is a context",
-      type: summaryOptions.type,
-      format: summaryOptions.format,
-      length: summaryOptions.length,
-    };
+    try {
+      setIsSummarizing(true);
 
-    const available = (await self.ai.summarizer.capabilities()).available;
-    let summarizer;
-    if (available === "no") {
-      // The Summarizer API isn't usable.
-      return;
-    }
-    if (available === "readily") {
-      // The Summarizer API can be used immediately .
-      summarizer = await self.ai.summarizer.create(options);
-    } else {
-      // The Summarizer API can be used after the model is downloaded.
-      summarizer = await self.ai.summarizer.create(options);
-      summarizer.addEventListener("downloadprogress", (e) => {
-        console.log(e.loaded, e.total);
+      const options = {
+        sharedContext: "This is a context",
+        type: summaryOptions.type,
+        format: summaryOptions.format,
+        length: summaryOptions.length,
+      };
+
+      const available = (await self.ai.summarizer.capabilities()).available;
+      let summarizer;
+
+      if (available === "no") {
+        throw new Error("Summarizer API is not available");
+      }
+
+      if (available === "readily") {
+        summarizer = await self.ai.summarizer.create(options);
+      } else {
+        summarizer = await self.ai.summarizer.create(options);
+        summarizer.addEventListener("downloadprogress", (e) => {
+          console.log(e.loaded, e.total);
+        });
+        await summarizer.ready;
+      }
+
+      const summary = await summarizer.summarize(message.data);
+
+      setEachChatSession([
+        ...eachChatSession,
+        { data: summary, from: "bot", lang: selectLang, date: new Date() },
+      ]);
+
+      // Scroll to bottom after message is sent
+      setTimeout(() => {
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: "smooth",
+        });
+      }, 100);
+    } catch (error) {
+      toast.error(CustomNotification, {
+        data: {
+          title: "Error",
+          content:
+            error instanceof Error ? error.message : "Failed to summarize text",
+        },
+        theme: "colored",
+        transition: Bounce,
+        hideProgressBar: false,
+        autoClose: 5000,
       });
-      await summarizer.ready;
+    } finally {
+      setIsSummarizing(false);
     }
-    const summary = await summarizer.summarize(message.data);
-
-    setEachChatSession([
-      ...eachChatSession,
-      { data: summary, from: "bot", lang: selectLang, date: new Date() },
-    ]);
   };
 
   return (

@@ -118,8 +118,9 @@ export default function Layout() {
       <div className="   min-h-screen w-full  sm:w-[75%]  min-[920px]:w-[80%] ">
         <Navbar toggleSidebar={toggleSidebar} />
         <main className=" wrapper py-9 min-h-[85vh] sm:min-h-[95vh] relative">
-          <Outlet />
-
+          <div className="h-full overflow-y-auto">
+            <Outlet />
+          </div>
           <div className="absolute bottom-0 right-0 left-0 w-full bg-[#020818] p-4">
             <div className="flex space-x-2.5 w-full bg-[#020818] rounded-lg border border-[#222d3d] text-gray-200 focus-within:border-[#3498db] pl-2 pr-4 py-3">
               <textarea

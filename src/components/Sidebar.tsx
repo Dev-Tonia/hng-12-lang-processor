@@ -1,6 +1,6 @@
-import { BookType } from "lucide-react";
+import { BookType, MessageSquareMore } from "lucide-react";
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { getAllChatSessions } from "../utils/db"; // Import the function to retrieve all chat sessions
 
 interface ChatSession {
@@ -20,6 +20,8 @@ interface SideBarProps {
 }
 
 const SideBar: React.FC<SideBarProps> = ({ isOpen, toggleSidebar }) => {
+  const navigate = useNavigate();
+
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([]); // State to store chat sessions
 
   // Retrieve all chat sessions when the component mounts
@@ -33,6 +35,11 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen, toggleSidebar }) => {
       console.error("Failed to fetch chat sessions:", error);
     });
   }, []);
+
+  // handle get started button click
+  const goToChat = () => {
+    navigate("/chat");
+  };
 
   return (
     <>
@@ -53,37 +60,49 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen, toggleSidebar }) => {
           className="flex overflow-y-auto h-full justify-between flex-col whitespace-nowrap border-b border-solid
          text-white border-b-[#292929] py-3"
         >
-          <div className="flex items-center gap-2">
-            <BookType className="text-[#3498db] size-8" />
-            <h2 className="text-lg font-bold leading-tight tracking-[-0.015em]">
-              textmosaic
-            </h2>
-          </div>
-
-          {/* Display Chat Sessions as NavLinks */}
-          <nav aria-label="Chat sessions">
-            <div className="space-y-2">
-              {chatSessions.map((session) => (
-                <div
-                  onClick={() => toggleSidebar()}
-                  key={session.id} // Close the sidebar on click
-                >
-                  <NavLink
-                    to={`/chat/${session.id}`}
-                    className={({ isActive }) =>
-                      `flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 text-sm font-bold leading-normal tracking-[0.015em] ${
-                        isActive
-                          ? "bg-[#3498db] text-[#020818]"
-                          : "bg-[#292929] text-[#FFFFFF] hover:bg-[#3498db] hover:text-[#020818]"
-                      }`
-                    }
-                  >
-                    <span className="truncate">{session.title}</span>
-                  </NavLink>
-                </div>
-              ))}
+          <div>
+            <div className="flex items-center gap-2">
+              <BookType className="text-[#3498db] size-8" />
+              <h2 className="text-lg font-bold leading-tight tracking-[-0.015em]">
+                textmosaic
+              </h2>
             </div>
-          </nav>
+
+            <div className=" my-5 flex justify-end">
+              <button
+                onClick={goToChat}
+                className="flex items-center gap-2 border border-solid border-[#3498db] rounded-lg px-3 py-2 text-sm font-medium text-white hover:bg-[#3498db] hover:text-white"
+              >
+                <MessageSquareMore />
+                <span> New Chat</span>
+              </button>
+            </div>
+
+            {/* Display Chat Sessions as NavLinks */}
+            <nav aria-label="Chat sessions">
+              <div className="space-y-2">
+                {chatSessions.map((session) => (
+                  <div
+                    onClick={() => toggleSidebar()}
+                    key={session.id} // Close the sidebar on click
+                  >
+                    <NavLink
+                      to={`/chat/${session.id}`}
+                      className={({ isActive }) =>
+                        `flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 text-sm font-bold leading-normal tracking-[0.015em] ${
+                          isActive
+                            ? "bg-[#3498db] text-[#020818]"
+                            : "bg-[#292929] text-[#FFFFFF] hover:bg-[#3498db] hover:text-[#020818]"
+                        }`
+                      }
+                    >
+                      <span className="truncate">{session.title}</span>
+                    </NavLink>
+                  </div>
+                ))}
+              </div>
+            </nav>
+          </div>
 
           {/* Share Button */}
           <div className="space-y-2">

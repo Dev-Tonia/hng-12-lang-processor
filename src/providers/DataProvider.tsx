@@ -33,6 +33,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     length: "medium",
   });
   const [uuid, setUuid] = useState<string>("");
+  const [isSummarizing, setIsSummarizing] = useState<boolean>(false);
 
   return (
     <DataContext.Provider
@@ -53,6 +54,8 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
         setEachChatSession,
         uuid,
         setUuid,
+        isSummarizing,
+        setIsSummarizing,
       }}
     >
       {children}

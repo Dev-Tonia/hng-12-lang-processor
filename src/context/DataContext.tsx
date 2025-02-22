@@ -21,6 +21,8 @@ interface DataContextType {
   setEachChatSession: (eachChatSession: Messages[]) => void;
   uuid: string;
   setUuid: (uuid: string) => void;
+  isSummarizing: boolean;
+  setIsSummarizing: (isSummarizing: boolean) => void;
 }
 
 // Define a default value
@@ -59,6 +61,10 @@ const defaultContextValue: DataContextType = {
   },
   uuid: "",
   setUuid: () => {
+    console.warn("No provider found!");
+  },
+  isSummarizing: false,
+  setIsSummarizing: () => {
     console.warn("No provider found!");
   },
 };
