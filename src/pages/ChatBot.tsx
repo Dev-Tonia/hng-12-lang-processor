@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { saveChatSession } from "../utils/db"; // Import the save function from db.js
 import CustomNotification from "../components/CustomNotification";
+import MessageBox from "../components/MessageBox";
 export default function ChatBot() {
   const { setUuid, uuid, eachChatSession } = useContext(DataContext);
   const isSupported = () => "ai" in self;
@@ -44,11 +45,12 @@ export default function ChatBot() {
   }, [uuid, eachChatSession]);
 
   return (
-    <div className="">
+    <div className="relative h-[90vh] flex flex-col">
       {!isSupported() ? (
         <NotSupported />
       ) : (
-        <div className="">
+        <div className="flex-1 overflow-y-auto px-4 pb-32">
+          {/* Add padding bottom to prevent content from going under MessageBox */}
           {eachChatSession &&
             eachChatSession.map((message, index) => {
               if (message.from === "user") {
@@ -60,6 +62,7 @@ export default function ChatBot() {
         </div>
       )}
       <ToastContainer />
+      <MessageBox />
     </div>
   );
 }

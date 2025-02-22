@@ -7,6 +7,7 @@ import { Bounce, toast, ToastContainer } from "react-toastify";
 import NotSupported from "../components/NotSupported";
 import { getChatSession } from "../utils/db";
 import CustomNotification from "../components/CustomNotification";
+import MessageBox from "../components/MessageBox";
 
 export default function ChatDetail() {
   const { chatId } = useParams<{ chatId: string }>();
@@ -59,11 +60,11 @@ export default function ChatDetail() {
   }, [chatId, setEachChatSession, getMessages, setGetMessages]);
 
   return (
-    <div className="">
+    <div className="relative min-h-[90vh] flex flex-col">
       {!isSupported() ? (
         <NotSupported />
       ) : (
-        <div className="">
+        <div className="flex-1 overflow-y-auto px-4 pb-32">
           {eachChatSession && eachChatSession.length > 0 ? (
             eachChatSession.map((message, index) => {
               if (message.from === "user") {
@@ -78,6 +79,7 @@ export default function ChatDetail() {
         </div>
       )}
       <ToastContainer />
+      <MessageBox />
     </div>
   );
 }
