@@ -81,7 +81,7 @@ export default function MessageBox({ message }: UserMessageBoxProps) {
         {
           data: translatedText,
           from: "bot",
-          lang: "fr",
+          lang: selectLang,
           date: new Date(),
         },
       ]);
